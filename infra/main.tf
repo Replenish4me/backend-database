@@ -10,6 +10,13 @@ resource "aws_lambda_function" "my_function" {
   lifecycle {
     create_before_destroy = true
   }
+
+  environment {
+    variables = {
+      db_name = aws_db_instance.db.identifier
+      secret_name = aws_secretsmanager_secret.db.name
+    }
+  }
 }
 
 resource "aws_iam_role" "my_role" {
