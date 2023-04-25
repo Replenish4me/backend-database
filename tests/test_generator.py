@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import patch, MagicMock
 from app.generator import generate_password, update_secret, rotate_rds_password
 
-
 class TestPasswordRotation(unittest.TestCase):
 
     def test_generate_password(self):
@@ -20,7 +19,7 @@ class TestPasswordRotation(unittest.TestCase):
         self.assertEqual(response, mock_secret)
 
     @patch('boto3.client')
-    @patch('generator.generate_password')
+    @patch('app.generator.generate_password')
     def test_rotate_rds_password(self, mock_generate_password, mock_client):
         mock_generate_password.return_value = 'newpassword'
         mock_rds = MagicMock()

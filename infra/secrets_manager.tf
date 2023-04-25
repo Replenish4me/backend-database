@@ -1,5 +1,9 @@
 resource "aws_secretsmanager_secret" "db" {
-  name = "replenish4me-db-password-${var.env}"
+  name = "${var.secret_name}-${var.env}"
+}
+
+resource "aws_secretsmanager_secret_rotation" "db" {
+  secret_id = aws_secretsmanager_secret.db.id
 
   rotation_lambda_arn = aws_lambda_function.my_function.arn
 
