@@ -13,8 +13,8 @@ resource "aws_lambda_function" "my_function" {
 
   environment {
     variables = {
-      db_name = aws_db_instance.db.identifier
-      secret_name = aws_secretsmanager_secret.db.name
+      db_name = "${var.db_name}-${var.function_name}-${var.env}"
+      secret_name = "${var.secret_name}-${var.env}"
     }
   }
 }
