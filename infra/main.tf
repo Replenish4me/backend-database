@@ -91,7 +91,7 @@ resource "aws_iam_policy" "my_rds_policy" {
       {
         Effect   = "Allow"
         Action   = ["rds:ModifyDBInstance"]
-        Resource = aws_db_instance.my_db_instance.arn
+        Resource = aws_db_instance.db.arn
       }
     ]
   })
