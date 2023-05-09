@@ -19,6 +19,14 @@ resource "aws_lambda_function" "my_function" {
   }
 }
 
+resource "aws_lambda_permission" "secretsmanager" {
+  statement_id  = "AllowExecutionFromSecretsManager"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.my_function.function_name
+  principal     = "secretsmanager.amazonaws.com"
+}
+
+
 resource "aws_iam_role" "my_role" {
   name = "replenish4me-${var.function_name}-role-${var.env}"
 
@@ -63,6 +71,20 @@ resource "aws_iam_role" "my_role" {
             "rds:ModifyDBInstance"
           ]
           Resource = aws_db_instance.db.arn
+        }
+      ]
+    })
+  }
+
+  inline_policy {
+    name = "lambda_secrets_manager_policy"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect = "Allow"
+          Action = "secretsmanager:GetSecretValue"
+          Resource = aws_secretsmanager_secret.db.arn
         }
       ]
     })
