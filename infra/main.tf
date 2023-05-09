@@ -28,7 +28,7 @@ resource "aws_lambda_permission" "secretsmanager" {
 
 
 resource "aws_iam_role" "my_role" {
-  name = "replenish4me-database-role-dev"
+  name = "replenish4me-${var.function_name}-role-${var.env}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -59,9 +59,11 @@ resource "aws_iam_role" "my_role" {
       ]
     })
   }
-
-  # Adicione a nova política aqui
-  policy = aws_iam_role_policy.my_rds_policy.id
+  
+  inline_policy {
+    name = "rds_policy"
+    policy = aws_iam_role_policy.my_rds_policy.policy
+  }
 }
 
 
