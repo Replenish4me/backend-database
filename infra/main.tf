@@ -96,3 +96,26 @@ resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
   role       = aws_iam_role.my_role.name
 }
+
+
+resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.my_role.name
+}
+
+resource "aws_iam_role_policy" "my_rds_policy" {
+  name   = "my-rds-policy"
+  role   = aws_iam_role.my_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = [
+          "rds:ModifyDBInstance"
+        ]
+        Resource = "arn:aws:rds:us-east-1:335175149999:db:replenish4me-database-dev"
+      }
+    ]
+  })
+}
