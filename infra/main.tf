@@ -34,7 +34,41 @@ resource "aws_iam_role" "my_role" {
       }
     ]
   })
+
+  inline_policy {
+    name = "secrets_manager_policy"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect = "Allow"
+          Action = [
+            "secretsmanager:GetSecretValue",
+            "secretsmanager:UpdateSecret"
+          ]
+          Resource = aws_secretsmanager_secret.db.arn
+        }
+      ]
+    })
+  }
+
+  inline_policy {
+    name = "rds_policy"
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Effect = "Allow"
+          Action = [
+            "rds:ModifyDBInstance"
+          ]
+          Resource = aws_db_instance.db.arn
+        }
+      ]
+    })
+  }
 }
+
 
 resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
