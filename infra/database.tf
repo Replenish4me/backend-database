@@ -18,5 +18,4 @@ resource "aws_db_instance" "db" {
   skip_final_snapshot  = true
   username      = "admin"
   password      = random_password.db_password.result
-  role          = aws_iam_role.my_role.arn
 }
