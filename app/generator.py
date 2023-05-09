@@ -17,15 +17,8 @@ def update_secret(secret_name, secret_value):
 
 def rotate_rds_password(secret_name, rds_instance_identifier):
     """Rotate the password of an RDS instance."""
-    # Get the current secret value
-    client = boto3.client('secretsmanager')
-    current_secret = client.get_secret_value(SecretId=secret_name)
-    current_password = current_secret['SecretString']
-
     # Generate a new password
     new_password = generate_password(16)
-    while new_password == current_password:
-        new_password = generate_password(16)
 
     # Update the RDS instance with the new password
     rds = boto3.client('rds')
