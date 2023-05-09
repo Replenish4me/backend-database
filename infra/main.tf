@@ -28,7 +28,7 @@ resource "aws_lambda_permission" "secretsmanager" {
 
 
 resource "aws_iam_role" "my_role" {
-  name = "replenish4me-${var.function_name}-role-${var.env}"
+  name = "replenish4me-database-role-dev"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -60,36 +60,10 @@ resource "aws_iam_role" "my_role" {
     })
   }
 
-  inline_policy {
-    name = "rds_policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = [
-            "rds:ModifyDBInstance"
-          ]
-          Resource = aws_db_instance.db.arn
-        }
-      ]
-    })
-  }
-
-  inline_policy {
-    name = "lambda_secrets_manager_policy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = "secretsmanager:GetSecretValue"
-          Resource = aws_secretsmanager_secret.db.arn
-        }
-      ]
-    })
-  }
+  # Adicione a nova política aqui
+  policy = aws_iam_role_policy.my_rds_policy.id
 }
+
 
 
 resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
@@ -97,11 +71,6 @@ resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
   role       = aws_iam_role.my_role.name
 }
 
-
-resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  role       = aws_iam_role.my_role.name
-}
 
 resource "aws_iam_role_policy" "my_rds_policy" {
   name   = "my-rds-policy"
