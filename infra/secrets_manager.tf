@@ -10,5 +10,4 @@ resource "aws_secretsmanager_secret_rotation" "db" {
   rotation_rules {
     automatically_after_days = 1
   }
-  role          = aws_iam_role.my_role.arn
 }
