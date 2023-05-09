@@ -77,9 +77,27 @@ resource "aws_iam_role" "my_role" {
   }
 }
 
-
-
 resource "aws_iam_role_policy_attachment" "my_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  role       = aws_iam_role.my_role.name
+}
+
+
+resource "aws_iam_policy" "my_rds_policy" {
+  name        = "my-rds-policy"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["rds:ModifyDBInstance"]
+        Resource = aws_db_instance.my_db_instance.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "my_rds_policy_attachment" {
+  policy_arn = aws_iam_policy.my_rds_policy.arn
   role       = aws_iam_role.my_role.name
 }
